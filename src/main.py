@@ -42,7 +42,7 @@ while running:
     snake.move_snake(screen, tail, surface.color)
     snake.move_snake(screen, snake.snake[-1], snake.color)
     pygame.time.wait(wait_time)
-    running = (False, True)[apple.update(snake.snake[-1], tail) and snake.in_itself()]
+    running = (False, True)[apple.update_spawns(snake.snake[-1], tail) and snake.in_itself()]
     pygame.time.wait(wait_time)
     # update() updates available cords for apple spawns and checks for wall collision
     # in_itself() checks snake collision with its body

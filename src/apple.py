@@ -36,7 +36,7 @@ class Apple(Surface):
         self.exists = 1
         self.apple = (x, y)
 
-    def update(self, head, tail):
+    def update_spawns(self, head, tail):
         """
         update available moves where apple can spawn.
         Handles wall collision via non-existent index in remove()

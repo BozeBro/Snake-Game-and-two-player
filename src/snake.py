@@ -1,14 +1,14 @@
-import pygame
 from collections import deque
+import pygame
 from surface import Surface
 
 WHITE = (255, 255, 255)
-class Snake:
+class Snake(Surface):
     """
     Creates the snake Object for the User to use
     """
 
-    def __init__(self, screen, surface_data, x=1, y=0, color=WHITE):
+    def __init__(self, screen, surface_data, x=1, y=0, **kwargs):
         """
         --------
         :param
@@ -17,11 +17,11 @@ class Snake:
         self.snake is a list representation of snake
         self._make_snake initializes snake on screen
         """
-        self.color = color
+        super().__init__(*surface_data)
         self.x = x
         self.y = y
         self.snake = deque([])
-        self.rows, self.columns, self.blocksize = surface_data
+        self.color = kwargs.get("color", WHITE)
         self._make_snake(screen)
 
     def _make_snake(self, screen, length=2):
@@ -75,7 +75,7 @@ class Snake:
         return:
             Boolean --> running
         """
-        if len(self.snake) != len(set(self.snake)):
+        if len(set(self.snake)) < len(self.snake):
             return False
         return True
 

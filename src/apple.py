@@ -1,33 +1,37 @@
 import random
 import sys
 import pygame
-RED = (255, 0, 0)
-class Apple:
-    def __init__(self, snake, surface_data):
-        self.color = RED
-        self.spawns = []
-        self.exists = 0
-        self.apple = None
-        self.valid_spawns(snake, *surface_data)
+from surface import Surface
 
-    def valid_spawns(self, snake, rows, columns, blocksize):
+RED = (255, 0, 0)
+class Apple(Surface):
+    def __init__(self, snake, surface_data, **kwargs):
+        super().__init__(*surface_data)
+        self.apple = None
+        self.exists = 0
+        self.spawns = []
+        self.color = kwargs.get("color", RED)
+        self._make_spawns(snake)
+
+    def _make_spawns(self, snake):
         """
+        Only used at initialization
         Finds valid spawn points for apple
         Does not include snake
         """
-        for y in range(columns):
-            for x in range(rows):
-                cord_x, cord_y = x * blocksize, y * blocksize
+        for y in range(self.columns):
+            for x in range(self.rows):
+                cord_x, cord_y = x * self.blocksize, y * self.blocksize
                 if (cord_x, cord_y) not in snake:
                     self.spawns.append((cord_x, cord_y))
 
-    def spawn_apple(self, screen, rows, columns, blocksize, color):
+    def make_apple(self, screen):
         """
         Creates the apple object onto the screen object
         """
         x, y = self.spawns[random.randint(0, len(self.spawns) - 1)]
-        rect = pygame.Rect(x, y, blocksize, blocksize)
-        pygame.draw.rect(screen, color, rect)
+        rect = pygame.Rect(x, y, self.blocksize, self.blocksize)
+        pygame.draw.rect(screen, self.color, rect)
         pygame.display.update(rect)
         self.exists = 1
         self.apple = (x, y)

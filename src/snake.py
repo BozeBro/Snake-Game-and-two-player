@@ -22,9 +22,9 @@ class Snake(Surface):
         self.y = y
         self.snake = deque([])
         self.color = kwargs.get("color", WHITE)
-        self._make_snake(screen)
+        self._make_snake(screen, kwargs.get("length", 2))
 
-    def _make_snake(self, screen, length=2):
+    def _make_snake(self, screen, length):
         """
         Initialize a snake with a length of length on the screen
         """

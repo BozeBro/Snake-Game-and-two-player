@@ -1,9 +1,7 @@
 from collections import deque
 import pygame
 from surface import Surface
-
-WHITE = (255, 255, 255)
-BLACK = (0, 0, 0)
+from colors import *
 
 
 class Snake(Surface):
@@ -11,7 +9,7 @@ class Snake(Surface):
     Creates the snake Object for the User to use
     """
 
-    def __init__(self, screen, surface_data, x=1, y=0, color=WHITE, length=2, **kwargs):
+    def __init__(self, screen, surface_data, x=1, y=0, color=WHITE, length=2):
         """
         --------
         :param
@@ -19,8 +17,7 @@ class Snake(Surface):
         y is the y vector
         screen is for _make_snake
         surface_data is the attributes from the Surface instance
-        **kwargs
-            color for color of snake. default color is white
+        color for color of snake. default color is white
         self.snake is a list representation of snake
 
         self._make_snake initializes snake on screen
@@ -29,8 +26,8 @@ class Snake(Surface):
         self.x = x
         self.y = y
         self.snake = None
-        self.color = kwargs.get("color", color)
-        self._make_snake(screen, kwargs.get("length", length))
+        self.color = color
+        self._make_snake(screen, length)
 
     def __len__(self):
         return len(self.snake)

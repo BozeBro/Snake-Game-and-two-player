@@ -1,8 +1,5 @@
 import pygame
-
-# color constants
-BLACK = (0, 0, 0)
-WHITE = (255, 255, 255)
+from colors import *
 
 
 class Surface:
@@ -12,13 +9,7 @@ class Surface:
     """
 
     def __init__(
-        self,
-        rows=17,
-        columns=17,
-        blocksize=20,
-        caption="Snake Game",
-        color=BLACK,
-        **kwargs
+        self, rows=17, columns=17, blocksize=20, caption="Snake Game", color=BLACK
     ):
         """
         :param:
@@ -34,7 +25,7 @@ class Surface:
         self.columns = columns
         self.blocksize = blocksize
         self.caption = caption
-        self.color = kwargs.get("color", color)
+        self.color = color
 
     def make_screen(self, grid_color=WHITE):
         """

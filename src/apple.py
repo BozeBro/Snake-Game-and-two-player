@@ -2,17 +2,16 @@ import random
 import sys
 import pygame
 from surface import Surface
-
-RED = (255, 0, 0)
+from colors import *
 
 
 class Apple(Surface):
-    def __init__(self, snake, surface_data, color=RED, **kwargs):
+    def __init__(self, snake, surface_data, color=RED):
         super().__init__(*surface_data)
         self.apple = None
         self.exists = 0
         self.spawns = []
-        self.color = kwargs.get("color", color)
+        self.color = color
         self._make_spawns(snake)
 
     def _make_spawns(self, snake):

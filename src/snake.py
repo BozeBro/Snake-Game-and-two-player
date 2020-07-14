@@ -52,7 +52,7 @@ class Snake(Surface):
             )
             self.snake.append((x * self.blocksize, y))
 
-    def get_user_move(self) -> None:
+    def get_user_move(self):
         """
         The move the user makes
         Will append the new square the snake in self.snake
@@ -67,15 +67,15 @@ class Snake(Surface):
         UP = keys[pygame.K_UP]
         head_x, head_y = self.x, self.y
         if any([UP, RIGHT, DOWN, LEFT]):
-            # Takes user move
-            # if user move goes opposite direction or
-            # user move is same as where the snake is already going
-            # no change in self.x, self.y
+            # See if user played a move, else no change in direction
             self.x, self.y = ((0, 1), (1, 0))[LEFT or RIGHT]
+            # Chooses whether user move is (left or right) or (down or up)
             self.x, self.y = ((-self.x, -self.y), (self.x, self.y))[DOWN or RIGHT]
+            # From the choice of two, we figure out the user move
             self.x, self.y = ((head_x, head_y), (self.x, self.y))[
                 self.x != head_x and self.y != head_y
             ]
+            # If (user move = snake move) or (user tries to go backwards), then no change
         self.snake.append(
             (
                 self.snake[-1][0] + self.x * self.blocksize,

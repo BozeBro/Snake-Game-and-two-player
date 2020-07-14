@@ -1,10 +1,19 @@
-class Test:
-    COLOR = "RED"
-    def color(self):
-        print("color")
-        def print_color(self):
-            print(COLOR)
-        return self.print_color()
+import functools
 
-m = Test()
-m.color()
+
+class Ex:
+    def wrapper(func):
+        @functools.wraps(func)
+        def wrap(self):
+            print("inside wrap")
+            return func(self)
+
+        return wrap
+
+    @wrapper
+    def method(self):
+        print("method")
+
+
+m = Ex()
+m.method()

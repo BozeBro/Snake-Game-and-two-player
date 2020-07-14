@@ -4,44 +4,52 @@ from apple import Apple
 from surface import Surface
 from snake import Snake
 
-# Color constants
-WHITE = (255, 255, 255)
-BLACK = (0, 0, 0)
-RED = (255, 0, 0)
-GREEN = (0, 255, 0)
-BLUE = (0, 0, 255)
-MAGENTA = (255, 0, 255)
 
-wait_time = 100
-clock = pygame.time.Clock()
+def game():
+    # Color constants
+    WHITE = (255, 255, 255)
+    BLACK = (0, 0, 0)
+    RED = (255, 0, 0)
+    GREEN = (0, 255, 0)
+    BLUE = (0, 0, 255)
+    MAGENTA = (255, 0, 255)
 
-surface = Surface(color=BLUE)
-screen = surface.make_screen()
-snake = Snake(screen, surface.surface_data, color=MAGENTA)
-apple = Apple(snake.snake, surface.surface_data)
-pygame.display.flip()
-running = True
+    # time variables
+    wait_time = 100
+    fps = 30
+    clock = pygame.time.Clock()
 
-while running:
-    for event in pygame.event.get():
-        if event.type == pygame.QUIT:
-            running = False
-    clock.tick(float("inf"))
-    snake.get_user_move()
-    pygame.time.wait(wait_time)
-    # allow user the time to make a move
-    tail = snake.snake.popleft()
-    if not apple.exists:
-        snake.snake.appendleft(tail)
-        apple.spawn_apple(
-            screen, surface.rows, surface.columns, surface.blocksize, apple.color
-        )
-    snake.move_snake(screen, tail, surface.color)
-    snake.move_snake(screen, snake.snake[-1], snake.color)
-    running = (False, True)[
-        apple.update(snake.snake[-1], tail) and snake.in_itself()
-        ]
-    # update() updates available cords for apple spawns and checks for wall collision
-    # in_itself() checks snake collision with its body
-print("FINISHED")
+    game_values = {"rows": 10, "columns": 10, "blocksize": 30}.values()
+    # Initializing objects
+    surface = Surface(*game_values, caption="Snake Game", color=BLUE)
+    screen = surface.make_screen()
+    snake = Snake(screen, game_values, length=1, color=GREEN)
+    apple = Apple(snake.snake, game_values, color=RED)
+    apple.make_rect(screen)
+    pygame.display.flip()
 
+    running = True
+    while running:
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                running = False
+        clock.tick(fps)
+        pygame.time.wait(wait_time)
+        # allow user time to make a move
+        snake.get_user_move()
+        tail = snake.snake.popleft()
+        snake.make_rect(screen, *tail, surface.color)
+        snake.make_rect(screen, *(head := snake.snake[-1]), snake.color)
+        running = (False, True)[apple.update_spawns(head, tail) and snake.in_itself()]
+        # update() updates available cords for apple spawns and checks for wall collision
+        # in_itself() checks snake collision with its body
+        if not apple.exists:
+            # handles when snake eats an apple
+            snake.snake.appendleft(tail)
+            apple.spawns.remove(tail)
+            apple.make_rect(screen)
+    print(f"snake length was {len(snake)}!")
+
+
+if __name__ == "__main__":
+    game()

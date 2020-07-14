@@ -3,42 +3,61 @@ from collections import deque
 from surface import Surface
 
 WHITE = (255, 255, 255)
-class Snake:
+BLACK = (0, 0, 0)
+
+
+class Snake(Surface):
     """
     Creates the snake Object for the User to use
     """
 
-    def __init__(self, screen, surface_data, x=1, y=0, color=WHITE):
+    def __init__(self, screen, surface_data, x=1, y=0, color=WHITE, length=2, **kwargs):
         """
         --------
         :param
-        self.x is the x vector
-        sef.y is the y vector
+        x is the x vector
+        y is the y vector
+        screen is for _make_snake
+        surface_data is the attributes from the Surface instance
+        **kwargs
+            color for color of snake. default color is white
         self.snake is a list representation of snake
+
         self._make_snake initializes snake on screen
         """
-        self.color = color
+        super().__init__(*surface_data)
         self.x = x
         self.y = y
-        self.snake = deque([])
-        self.rows, self.columns, self.blocksize = surface_data
-        self._make_snake(screen)
+        self.snake = 0
+        self.color = kwargs.get("color", color)
+        self._make_snake(screen, kwargs.get("length", length))
 
-    def _make_snake(self, screen, length=2):
+    def __len__(self):
+        return len(self.snake)
+
+    def _make_snake(self, screen, length):
         """
         Initialize a snake with a length of length on the screen
+
+        :param
+        screen is the screen object that is drawn on
+        length is snake length. default is 2
         """
+        self.snake = deque([])
         y = self.columns * self.blocksize // 2
-        y = (y - self.blocksize//2, y)[self.columns % 2 == 0]
+        y = (y - self.blocksize // 2, y)[self.columns % 2 == 0]
         for x in range(1, length + 1):
-            rect = pygame.Rect(x * self.blocksize, y, self.blocksize, self.blocksize,)
-            pygame.draw.rect(screen, self.color, rect)
+            super().make_rect(
+                screen, x * self.blocksize, y * self.blocksize, self.color
+            )
             self.snake.append((x * self.blocksize, y))
 
-    def get_user_move(self):
+    def get_user_move(self) -> None:
         """
-        The moves the user makes
-        self.x, self.y will give the direction to move on screen.
+        The move the user makes
+        Will append the new square the snake in self.snake
+        Handles illegal moves and insignificant moves 
+            (Moving left while snake already going left)
         """
         # key constants
         keys = pygame.key.get_pressed()
@@ -64,26 +83,16 @@ class Snake:
             )
         )
 
-    def move_snake(self, screen, cords, color):
-        x, y = cords
-        rect = pygame.Rect(x, y, self.blocksize, self.blocksize)
-        pygame.draw.rect(screen, color, rect)
-        pygame.display.update(rect)
-    
     def in_itself(self):
-        """ 
-        return:
-            Boolean --> running
-        """
-        if len(self.snake) != len(set(self.snake)):
-            return False
-        return True
+        return len(set(self.snake)) == len(self.snake)
 
 
 if __name__ == "__main__":
     surface = Surface()
     screen = surface.make_screen()
-    snake = Snake(screen, surface.snake_data)
+    snake = Snake(
+        screen, {"rows": 10, "columns": 10, "blocksize": 30}.values(), length=1
+    )
     pygame.display.flip()
     clock = pygame.time.Clock()
     running = True
@@ -91,10 +100,9 @@ if __name__ == "__main__":
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 running = False
-        clock.tick(float('inf'))
+        clock.tick(float("inf"))
         snake.get_user_move()
         pygame.time.wait(100)
         tail = snake.snake.popleft()
-        snake.move_snake(screen, tail, (0, 0, 0))
-        snake.move_snake(screen, snake.snake[-1], (255, 255, 255))
-    
+        snake.test_snake(screen, snake.snake[-1], WHITE)
+        snake.test_snake(screen, tail, BLACK)

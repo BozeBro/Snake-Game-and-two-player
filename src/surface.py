@@ -11,7 +11,15 @@ class Surface:
     Class methods are only used during runtime to produce the surface object
     """
 
-    def __init__(self, rows=17, columns=17, blocksize=20, caption="Snake Game", color=BLACK):
+    def __init__(
+        self,
+        rows=17,
+        columns=17,
+        blocksize=20,
+        caption="Snake Game",
+        color=BLACK,
+        **kwargs
+    ):
         """
         :param:
             (rows=17, columns=17, blocksize=20, caption="Snake Game")
@@ -20,16 +28,13 @@ class Surface:
                 Each row/column is a row/column of squares
             blocksize tells how big a square is in pixels(px)
             caption tells what the title in the game window
-        self.surface_data
-            attributes for snake object to inheret
         """
         # constants
         self.rows = rows
         self.columns = columns
-        self.caption = caption
         self.blocksize = blocksize
-        self.color = color
-        self.surface_data = (self.rows, self.columns, self.blocksize)
+        self.caption = caption
+        self.color = kwargs.get("color", color)
 
     def make_screen(self, grid_color=WHITE):
         """
@@ -37,41 +42,23 @@ class Surface:
         param:
         grid_color
             color of the border of each square. Past into grid maker function
-        squares
-            Color of the squares
-        return:
-        grid maker object
         """
         pygame.init()
-        self.screen = pygame.display.set_mode(
+        screen = pygame.display.set_mode(
             (self.rows * self.blocksize, self.columns * self.blocksize)
         )
         pygame.display.set_caption(self.caption)
-        self.screen.fill(self.color)
-        return self.screen
-        # return self._make_grid(grid_color)
+        screen.fill(self.color)
+        return screen
 
-    def _make_grid(self, color=WHITE):
+    def make_rect(self, screen, x, y, color, **kwargs):
+        """ 
+        Used by apple and snake object.
+        Draws a rectangle onto the screen.
         """
-        Turns the screen object into a grid.
-        :param
-        color
-            color of the borders of each square
-        :return
-        screen object
-        """
-
-        for y in range(self.columns):
-            for x in range(self.rows):
-                rect = pygame.Rect(
-                    x * self.blocksize,
-                    y * self.blocksize,
-                    self.blocksize,
-                    self.blocksize,
-                )
-                pygame.draw.rect(self.screen, color, rect, 1)
-                pygame.display.flip()
-        return self.screen
+        rect = pygame.Rect(x, y, self.blocksize, self.blocksize)
+        pygame.draw.rect(screen, color, rect, **kwargs)
+        pygame.display.update(rect)
 
 
 if __name__ == "__main__":

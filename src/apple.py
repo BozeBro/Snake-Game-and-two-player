@@ -13,9 +13,9 @@ class Apple(Surface):
         self.exists = 0
         self.spawns = []
         self.color = kwargs.get("color", color)
-        self._valid_spawns(snake)
+        self._make_spawns(snake)
 
-    def _valid_spawns(self, snake):
+    def _make_spawns(self, snake):
         """
         Only used at initialization
         Finds valid spawn points for apple

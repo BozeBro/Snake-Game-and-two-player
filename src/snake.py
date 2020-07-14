@@ -1,5 +1,5 @@
-import pygame
 from collections import deque
+import pygame
 from surface import Surface
 
 WHITE = (255, 255, 255)
@@ -28,7 +28,7 @@ class Snake(Surface):
         super().__init__(*surface_data)
         self.x = x
         self.y = y
-        self.snake = 0
+        self.snake = None
         self.color = kwargs.get("color", color)
         self._make_snake(screen, kwargs.get("length", length))
 

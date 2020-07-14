@@ -55,6 +55,7 @@ def game():
             snake.snake.appendleft(tail)
             apple.spawns.remove(tail)
             apple.make_rect(screen)
+    if len(snake) == surface.rows * surface.columns: print("You won") 
     print(f"snake length was {len(snake)}!")
     if len(snake) == surface.rows * surface.columns:
         print("You won")

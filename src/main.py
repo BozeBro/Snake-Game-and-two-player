@@ -91,7 +91,7 @@ def game(players=1):
         pygame.time.wait(wait_time)
         # move() Handles self collision, collision with others, and ollision with walls
         running, winner = move_snake(snake, snake2, "snake2")
-        if running:
+        if running and snake2:
             running, winner = move_snake(snake2, snake, "snake")
         # handles when a snake eats an apple
         if not apple.exists:

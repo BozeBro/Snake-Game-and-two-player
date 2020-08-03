@@ -18,13 +18,13 @@ class Snake(Surface):
         """
         --------
         :param
-        x is the x vector
-        y is the y vector
-        surface_data is the attributes from the Surface instance
-        color for color of snake. default color is white
-        self.snake is a list representation of snake
+            x - the x vector
+            y - the y vector
+            surface_data - the attributes from the Surface instance
+            color - color of snake
+            self.snake - list representation of snake object
 
-        self._make_snake initializes snake on screen
+            self._make_snake initializes snake on screen
         """
         super().__init__(*surface_data)
         self.screen = screen
@@ -33,7 +33,7 @@ class Snake(Surface):
         self.typing = typing
         self.snake = None
         self.color = color
-        self._make_snake(pos)
+        self.snake = self._make_snake(pos)
 
     def __len__(self):
         return max(1, len(self.snake))
@@ -41,16 +41,20 @@ class Snake(Surface):
     def _make_snake(self, pos):
         """
         Initialize a snake with a length of length on the screen
-
         :param
-        pos is x position of the snake and range arguments.
+            pos - x position of the snake and range arguments.
+                pos[0] is the head. pos[-1] is the tail
+        :return
+            snake -> self.snake
         """
-        self.snake = deque([])
+        snake = deque([])
         y = self.columns * self.blocksize // 2
+        # y - self.blocksize // 2 prevents snake being in partly 2 squares
         y = (y - self.blocksize // 2, y)[self.columns % 2 == 0]
         for x in range(*pos):
             self.make_rect(x * self.blocksize, y * self.blocksize, self.color)
-            self.snake.append((x * self.blocksize, y))
+            snake.append((x * self.blocksize, y))
+        return snake
 
     def get_user_move(self):
         """
@@ -103,11 +107,12 @@ class Snake(Surface):
 
 
 if __name__ == "__main__":
+    # Test to handle snake spawning and movement
     surface = Surface()
-    screen = surface.make_screen()
-    snake = Snake(screen, {"rows": 10, "columns": 10, "blocksize": 30}.values())
+    surface.make_screen()
+    snake = Snake(surface.screen, {"rows": 10, "columns": 10, "blocksize": 30}.values())
     snakely = Snake(
-        screen,
+        surface.screen,
         {"rows": 10, "columns": 10, "blocksize": 30}.values(),
         color=RED,
         pos=(4, 7, 1),
@@ -115,8 +120,8 @@ if __name__ == "__main__":
     pygame.display.flip()
     clock = pygame.time.Clock()
     running = True
-    snake.make_rect(screen, *snake.snake[-1], snake.color)
-    snakely.make_rect(screen, *snakely.snake[-1], snakely.color)
+    snake.make_rect(*snake.snake[-1], snake.color)
+    snakely.make_rect(*snakely.snake[-1], snakely.color)
     while running:
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
@@ -125,5 +130,5 @@ if __name__ == "__main__":
         snake.get_user_move()
         pygame.time.wait(100)
         tail = snake.snake.popleft()
-        # snake.make_rect(screen, *snake.snake[-1], WHITE)
-        # snake.make_rect(screen, *tail, BLACK)
+        snake.make_rect(*snake.snake[-1], WHITE)
+        snake.make_rect(*tail, BLACK)

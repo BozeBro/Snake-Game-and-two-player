@@ -9,13 +9,13 @@ def game(players=1):
     """
     Overview
     -------------
-    Surface controls game screen and the parent class of the Snake and Apple class
+    Surface - controls game screen and the parent class of the Snake and Apple class
         It controls creation of the game screen and 
         making drawings on the game screen that the user sees
-    The Snake class controls initialization of the snake onto the game screen
+    Snake - controls initialization of the snake onto the game screen
         It handles a user's moves and passes it to the Surface class to make into a drawing
         It handles whenever the snake collides with itself on the game screen
-    The Apple class controls the location of apple spawns
+    Apple - controls the location of apple spawns
         It will pass a decided spawn location to the Surface clas to make into a drawing
         It holds a list to store valid spawns and updates valid spawns after every move
         It handles whenever the snake collides into the border of the screen.
@@ -29,6 +29,8 @@ def game(players=1):
         Finds the eating snake to add tail back, 
         update apple spawns and 
         make a new apple
+        :param
+            snakes(iterable) - gives the players
         """
         for user in snakes:
             if user.snake[-1] == apple.apple:
@@ -41,9 +43,9 @@ def game(players=1):
         """
         Moves the snake head, and updates apple spawns
         :param
-        user - current snake to move
-        other_user - other snake. Will be [] if single player
-        winner - sets the winner to other_user if user dies/collides
+            user - current snake to move
+            other_user - other snake. Will be [] if single player
+            winner - sets the winner to other_user if user dies/collides
         :return
             running, winner
         """
@@ -69,16 +71,16 @@ def game(players=1):
     game_values = {"rows": 30, "columns": 30, "blocksize": 10}.values()
     # Initializing objects
     surface = Surface(*game_values, caption="Snake Game", color=BLACK)
-    screen = surface.make_screen()
-    snake = Snake(screen, game_values, color=GREEN)
+    surface.make_screen()
+    snake = Snake(surface.screen, game_values, color=GREEN)
     if players == 2:
         snake2 = Snake(
-            screen, game_values, x=-1, typing="letters", pos=(16, 15, -1), color=MAGENTA
+            surface.screen, game_values, x=-1, typing="letters", pos=(16, 15, -1), color=MAGENTA
         )
     else:
         snake2 = []
     snakes = (snake, snake2)
-    apple = Apple(screen, snakes, game_values, color=RED)
+    apple = Apple(surface.screen, snakes, game_values, color=RED)
     apple.make_rect()
     pygame.display.flip()
     running, end = True, False

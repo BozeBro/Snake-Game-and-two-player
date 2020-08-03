@@ -4,8 +4,9 @@ from colors import *
 
 class Surface:
     """
-    Class to produce the surface to play the game.
-    Class methods are only used during runtime to produce the surface object
+    Handles functions that interact with the screen including:
+    drawing to the screen
+    creating the screen
     """
 
     def __init__(
@@ -13,12 +14,12 @@ class Surface:
     ):
         """
         :param:
-            (rows=17, columns=17, blocksize=20, caption="Snake Game")
-            rows tells how many rows there will be
-            columns tells how many columns there will be
-                Each row/column is a row/column of squares
-            blocksize tells how big a square is in pixels(px)
-            caption tells what the title in the game window
+        (rows=17, columns=17, blocksize=20, caption="Snake Game")
+        rows - tells how many rows there will be
+        columns - tells how many columns there will be
+        blocksize - tells how big a square
+        caption - tells what the title in the game window
+        color - tells what the color of screen is
         """
         # constants
         self.rows = rows
@@ -27,20 +28,17 @@ class Surface:
         self.caption = caption
         self.color = color
 
-    def make_screen(self, grid_color=WHITE):
+    def make_screen(self):
         """
         Initializes the screen object where the game is played.
-        param:
-        grid_color
-            color of the border of each square. Past into grid maker function
+        Only used at runtime, or when game plays
         """
         pygame.init()
-        screen = pygame.display.set_mode(
+        self.screen = pygame.display.set_mode(
             (self.rows * self.blocksize, self.columns * self.blocksize)
         )
         pygame.display.set_caption(self.caption)
-        screen.fill(self.color)
-        return screen
+        self.screen.fill(self.color)
 
     def make_rect(self, x, y, color, **kwargs):
         """ 

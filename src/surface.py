@@ -53,8 +53,8 @@ class Surface:
 
 
 if __name__ == "__main__":
-    surface = Surface()
-    surface.make_screen()
+    surface = Surface(color=WHITE)
+    screen = surface.make_screen()
     pygame.display.flip()
     running = True
     while running:

@@ -9,7 +9,7 @@ class Snake(Surface):
     Creates the snake Object for the User to use
     """
 
-    def __init__(self, screen, surface_data, x=1, y=0, color=WHITE, length=2):
+    def __init__(self, screen, surface_data, x=1, y=0, typing="arrows", color=WHITE, pos=(1, 2, 1)):
         """
         --------
         :param
@@ -22,31 +22,30 @@ class Snake(Surface):
 
         self._make_snake initializes snake on screen
         """
+        self.typing = typing
         super().__init__(*surface_data)
         self.x = x
         self.y = y
         self.snake = None
         self.color = color
-        self._make_snake(screen, length)
+        self._make_snake(screen, pos)
 
     def __len__(self):
         return len(self.snake)
 
-    def _make_snake(self, screen, length):
+    def _make_snake(self, screen, pos):
         """
         Initialize a snake with a length of length on the screen
 
         :param
         screen is the screen object that is drawn on
-        length is snake length. default is 2
+        pos is position of the snake - range arguments.
         """
         self.snake = deque([])
         y = self.columns * self.blocksize // 2
         y = (y - self.blocksize // 2, y)[self.columns % 2 == 0]
-        for x in range(1, length + 1):
-            super().make_rect(
-                screen, x * self.blocksize, y * self.blocksize, self.color
-            )
+        for x in range(*pos):
+            self.make_rect(screen, x * self.blocksize, y * self.blocksize, self.color)
             self.snake.append((x * self.blocksize, y))
 
     def get_user_move(self):
@@ -56,12 +55,24 @@ class Snake(Surface):
         Handles illegal moves and insignificant moves 
             (Moving left while snake already going left)
         """
-        # key constants
+        # left, right, down, up. key formation
         keys = pygame.key.get_pressed()
-        LEFT = keys[pygame.K_LEFT]
-        RIGHT = keys[pygame.K_RIGHT]
-        DOWN = keys[pygame.K_DOWN]
-        UP = keys[pygame.K_UP]
+        move_types = {
+            "arrows": (
+                keys[pygame.K_LEFT],
+                keys[pygame.K_RIGHT],
+                keys[pygame.K_DOWN],
+                keys[pygame.K_UP],
+            ),
+            "letters": (
+                keys[pygame.K_a],
+                keys[pygame.K_d],
+                keys[pygame.K_s],
+                keys[pygame.K_w],
+            ),
+        }
+        # key constants
+        LEFT, RIGHT, DOWN, UP = move_types[self.typing]
         head_x, head_y = self.x, self.y
         if any([UP, RIGHT, DOWN, LEFT]):
             # See if user played a move, else no change in direction
@@ -81,18 +92,27 @@ class Snake(Surface):
         )
 
     def in_itself(self):
-        return len(set(self.snake)) == len(self.snake)
+        return len(set(self.snake)) != len(self.snake)
+
+    def in_other(self, snake):
+        return self.snake[-1] in set(snake)
 
 
 if __name__ == "__main__":
     surface = Surface()
     screen = surface.make_screen()
-    snake = Snake(
-        screen, {"rows": 10, "columns": 10, "blocksize": 30}.values(), length=1
+    snake = Snake(screen, {"rows": 10, "columns": 10, "blocksize": 30}.values())
+    snakely = Snake(
+        screen,
+        {"rows": 10, "columns": 10, "blocksize": 30}.values(),
+        color=RED,
+        pos=(4, 7, 1),
     )
     pygame.display.flip()
     clock = pygame.time.Clock()
     running = True
+    snake.make_rect(screen, *snake.snake[-1], snake.color)
+    snakely.make_rect(screen, *snakely.snake[-1], snakely.color)
     while running:
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
@@ -101,5 +121,5 @@ if __name__ == "__main__":
         snake.get_user_move()
         pygame.time.wait(100)
         tail = snake.snake.popleft()
-        snake.test_snake(screen, snake.snake[-1], WHITE)
-        snake.test_snake(screen, tail, BLACK)
+        # snake.make_rect(screen, *snake.snake[-1], WHITE)
+        # snake.make_rect(screen, *tail, BLACK)

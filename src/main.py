@@ -5,7 +5,7 @@ from snake import Snake
 from colors import *
 
 
-def game(players=2):
+def game(players=1):
     """
     Overview
     -------------

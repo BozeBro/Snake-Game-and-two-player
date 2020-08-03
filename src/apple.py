@@ -1,4 +1,3 @@
-import itertools
 import random
 import sys
 import pygame
@@ -8,10 +7,9 @@ from colors import *
 
 
 class Apple(Surface):
-    def __init__(self, snakes, surface_data, color=RED):
+    def __init__(self, screen, snakes, surface_data, color=RED):
+        self.screen = screen
         super().__init__(*surface_data)
-        self.apple = None
-        self.exists = [0 for i in snakes]
         self.spawns = []
         self.color = color
         self.make_spawns(snakes)
@@ -20,25 +18,24 @@ class Apple(Surface):
         """
         Only used at initialization
         Finds valid spawn points for apple
-        Does not include snake
+        Creates spawns attribute
         """
         snakes = [body for body in [user.snake for user in snakes if user]]
+        self.spawns = [
+            (cord_x, cord_y)
+            for y in range(self.columns)
+            for x in range(self.rows)
+            if ((cord_x := x * self.blocksize), (cord_y := y * self.blocksize))
+            not in snakes
+        ]
 
-        self.spawns = []
-        for y in range(self.columns):
-            for x in range(self.rows):
-                cord_x, cord_y = x * self.blocksize, y * self.blocksize
-                if (cord_x, cord_y) not in snakes:
-                    self.spawns.append((cord_x, cord_y))
-
-    def make_rect(self, screen, **kwargs):
+    def make_rect(self, **kwargs):
         """
         Creates the apple object onto the screen object
         all kwargs are sent to drawing the rectangle
         """
         x, y = self.spawns[random.randint(0, len(self.spawns) - 1)]
-        # x, y = 15 * self.blocksize, 15 * self.blocksize
-        super().make_rect(screen, x, y, self.color, **kwargs)
+        super().make_rect(x, y, self.color, **kwargs)
         self.exists = 1
         self.apple = (x, y)
 
@@ -46,6 +43,8 @@ class Apple(Surface):
         """
         update available moves where apple can spawn.
         Handles wall collision via non-existent index in remove()
+        Finds if apple has been eaten or not
+            Turnary is used to stop overidding
         :return
             Boolean -> running
         """

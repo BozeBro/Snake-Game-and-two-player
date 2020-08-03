@@ -5,47 +5,51 @@ from colors import *
 
 
 class Snake(Surface):
-    """
-    Creates the snake Object for the User to use
-    """
-
-    def __init__(self, screen, surface_data, x=1, y=0, typing="arrows", color=WHITE, pos=(1, 2, 1)):
+    def __init__(
+        self,
+        screen,
+        surface_data,
+        x=1,
+        y=0,
+        typing="arrows",
+        color=WHITE,
+        pos=(1, 2, 1),
+    ):
         """
         --------
         :param
         x is the x vector
         y is the y vector
-        screen is for _make_snake
         surface_data is the attributes from the Surface instance
         color for color of snake. default color is white
         self.snake is a list representation of snake
 
         self._make_snake initializes snake on screen
         """
-        self.typing = typing
         super().__init__(*surface_data)
+        self.screen = screen
         self.x = x
         self.y = y
+        self.typing = typing
         self.snake = None
         self.color = color
-        self._make_snake(screen, pos)
+        self._make_snake(pos)
 
     def __len__(self):
-        return len(self.snake)
+        return max(1, len(self.snake))
 
-    def _make_snake(self, screen, pos):
+    def _make_snake(self, pos):
         """
         Initialize a snake with a length of length on the screen
 
         :param
-        screen is the screen object that is drawn on
-        pos is position of the snake - range arguments.
+        pos is x position of the snake and range arguments.
         """
         self.snake = deque([])
         y = self.columns * self.blocksize // 2
         y = (y - self.blocksize // 2, y)[self.columns % 2 == 0]
         for x in range(*pos):
-            self.make_rect(screen, x * self.blocksize, y * self.blocksize, self.color)
+            self.make_rect(x * self.blocksize, y * self.blocksize, self.color)
             self.snake.append((x * self.blocksize, y))
 
     def get_user_move(self):

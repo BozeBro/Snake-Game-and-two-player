@@ -42,13 +42,13 @@ class Surface:
         screen.fill(self.color)
         return screen
 
-    def make_rect(self, screen, x, y, color, **kwargs):
+    def make_rect(self, x, y, color, **kwargs):
         """ 
         Used by apple and snake object.
         Draws a rectangle onto the screen.
         """
         rect = pygame.Rect(x, y, self.blocksize, self.blocksize)
-        pygame.draw.rect(screen, color, rect, **kwargs)
+        pygame.draw.rect(self.screen, color, rect, **kwargs)
         pygame.display.update(rect)
 
 

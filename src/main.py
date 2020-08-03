@@ -1,4 +1,3 @@
-# import random
 import pygame
 from apple import Apple
 from surface import Surface

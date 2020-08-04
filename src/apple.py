@@ -30,12 +30,12 @@ class Apple(Surface):
         :return
             list of valid spawn coordinates -> self.spawns
         """
-        snakes = [body for body in [snake.snake for snake in snake if user]]
+        snakes = [body for body in [snake.snake for snake in snakes if snake]]
         return [
             (cord_x, cord_y)
             for y in range(self.columns)
             for x in range(self.rows)
-            if ((cord_x := x * self.blocksize), (cord_y := y * self.blocksize))
+            if (cord_x := x * self.blocksize, cord_y := y * self.blocksize)
             not in snakes
         ]
 

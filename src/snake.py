@@ -47,9 +47,12 @@ class Snake(Surface):
         :return
             snake -> self.snake
         """
-        y = self.columns * self.blocksize // 2
         # y - self.blocksize // 2 prevents snake being in partly 2 squares
-        y = (y - self.blocksize // 2, y)[self.columns % 2 == 0]
+        y = (
+            (y := self.columns * self.blocksize // 2)
+            if self.columns % 2 == 0
+            else y - self.blocksize // 2
+        )
         snake = deque([])
         for x in range(*pos):
             self.make_rect(x * self.blocksize, y * self.blocksize, self.color)
@@ -85,13 +88,15 @@ class Snake(Surface):
         # See if user played a move, else no change in direction
         if any([UP, RIGHT, DOWN, LEFT]):
             # Chooses whether user move is (left or right) or (down or up)
-            self.x, self.y = ((0, 1), (1, 0))[LEFT or RIGHT]
+            self.x, self.y = (1, 0) if LEFT or RIGHT else (0, 1)
             # From the choice of two, we figure out the user move
-            self.x, self.y = ((-self.x, -self.y), (self.x, self.y))[DOWN or RIGHT]
+            self.x, self.y = (self.x, self.y) if DOWN or RIGHT else (-self.x, -self.y)
             # See if the move is legal and changes snake direction
-            self.x, self.y = ((head_x, head_y), (self.x, self.y))[
-                self.x != head_x and self.y != head_y
-            ]
+            self.x, self.y = (
+                (head_x, head_y)
+                if self.x == head_x and self.y == head_y
+                else (self.x, self.y)
+            )
         self.snake.append(
             (
                 self.snake[-1][0] + self.x * self.blocksize,

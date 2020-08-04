@@ -68,8 +68,6 @@ class Apple(Surface):
             self.spawns.append(tail)
             # error in remove method if snake out of grid.
             self.spawns.remove(head)
-            # self.exists in conditional to keep
-            # self.exists False if already false
             self.exists = (0, 1)[head != self.apple and self.exists]
         except ValueError:
             return False

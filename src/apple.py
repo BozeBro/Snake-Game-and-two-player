@@ -78,6 +78,7 @@ class Apple(Surface):
 
 if __name__ == "__main__":
     # Test for the creation of an apple
+    pygame.init()
     game_values = {"rows": 30, "columns": 30, "blocksize": 10}.values()
     surface = Surface(*game_values, caption="Snake Game", color=BLUE)
     surface.make_screen()

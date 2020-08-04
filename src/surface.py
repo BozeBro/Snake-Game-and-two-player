@@ -33,7 +33,6 @@ class Surface:
         Initializes the screen object where the game is played.
         Only used at runtime, or when game plays
         """
-        pygame.init()
         self.screen = pygame.display.set_mode(
             (self.rows * self.blocksize, self.columns * self.blocksize)
         )
@@ -52,6 +51,7 @@ class Surface:
 
 if __name__ == "__main__":
     # Test for creation of the screen
+    pygame.init()
     surface = Surface(color=WHITE)
     surface.make_screen()
     pygame.display.flip()

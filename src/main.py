@@ -4,6 +4,23 @@ from surface import Surface
 from snake import Snake
 from colors import *
 
+import os.path
+
+
+def home():
+    """
+                                Single Player
+                                Two Player
+                                How to Play
+    """
+    filepath = os.path.dirname(__file__)
+    single = pygame.image.load(os.path.join(filepath, "images\single.png"))
+    end = False
+    while not end:
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                end = True
+
 
 def game(players=1):
     """
@@ -21,7 +38,7 @@ def game(players=1):
         It handles whenever the snake collides into the border of the screen.
     
     :param
-    players - controls amount of players in the game
+        players - controls amount of players in the game
     """
 
     def who_ate(snakes):
@@ -72,11 +89,15 @@ def game(players=1):
     # Initializing objects
     surface = Surface(*game_values, caption="Snake Game", color=BLACK)
     surface.make_screen()
-    snake = Snake(surface.screen, game_values, color=GREEN)
+    snake = Snake(
+        surface.screen,
+        game_values,
+        x=-1,
+        pos=(surface.rows - 1, surface.rows - 2, -1),
+        color=GREEN,
+    )
     if players == 2:
-        snake2 = Snake(
-            surface.screen, game_values, x=-1, typing="letters", pos=(16, 15, -1), color=MAGENTA
-        )
+        snake2 = Snake(surface.screen, game_values, typing="letters", color=MAGENTA)
     else:
         snake2 = []
     snakes = (snake, snake2)
@@ -116,4 +137,6 @@ def game(players=1):
 
 
 if __name__ == "__main__":
-    game()
+    pygame.init()
+    home()
+    # game()

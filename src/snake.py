@@ -16,8 +16,8 @@ class Snake(Surface):
         pos=(1, 2, 1),
     ):
         """
-        --------
         :param
+            (x, y) must be 1, -1, or 0
             x - the x vector
             y - the y vector
             surface_data - the attributes from the Surface instance
@@ -43,14 +43,14 @@ class Snake(Surface):
         Initialize a snake with a length of length on the screen
         :param
             pos - x position of the snake and range arguments.
-                pos[0] is the head. pos[-1] is the tail
+                pos[0] is the head cords. pos[-1] is the tail cords
         :return
             snake -> self.snake
         """
-        snake = deque([])
         y = self.columns * self.blocksize // 2
         # y - self.blocksize // 2 prevents snake being in partly 2 squares
         y = (y - self.blocksize // 2, y)[self.columns % 2 == 0]
+        snake = deque([])
         for x in range(*pos):
             self.make_rect(x * self.blocksize, y * self.blocksize, self.color)
             snake.append((x * self.blocksize, y))
@@ -60,8 +60,8 @@ class Snake(Surface):
         """
         The move the user makes
         Will append the new square the snake in self.snake
-        Handles illegal moves and insignificant moves 
-            (Moving left while snake already going left)
+        Handles illegal moves 
+            like moving backwards
         """
         # left, right, down, up. key formation
         keys = pygame.key.get_pressed()
@@ -82,16 +82,16 @@ class Snake(Surface):
         # key constants
         LEFT, RIGHT, DOWN, UP = move_types[self.typing]
         head_x, head_y = self.x, self.y
+        # See if user played a move, else no change in direction
         if any([UP, RIGHT, DOWN, LEFT]):
-            # See if user played a move, else no change in direction
-            self.x, self.y = ((0, 1), (1, 0))[LEFT or RIGHT]
             # Chooses whether user move is (left or right) or (down or up)
-            self.x, self.y = ((-self.x, -self.y), (self.x, self.y))[DOWN or RIGHT]
+            self.x, self.y = ((0, 1), (1, 0))[LEFT or RIGHT]
             # From the choice of two, we figure out the user move
+            self.x, self.y = ((-self.x, -self.y), (self.x, self.y))[DOWN or RIGHT]
+            # See if the move is legal and changes snake direction
             self.x, self.y = ((head_x, head_y), (self.x, self.y))[
                 self.x != head_x and self.y != head_y
             ]
-            # If (user move = snake move) or (user tries to go backwards), then no change
         self.snake.append(
             (
                 self.snake[-1][0] + self.x * self.blocksize,

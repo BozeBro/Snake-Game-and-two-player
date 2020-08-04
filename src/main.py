@@ -12,18 +12,18 @@ def home(game_values):
     """
     Home page of the game / GUI
     """
-    width = rows * blocksize
-    height = columns * blocksize
+    width, height = rows * blocksize, columns * blocksize
     # icon size constants
     i_width, i_height = width // 4 + (rows // 3), height // 4
     # icon position constants,
     # sg for single, and double,
-    # sn for snake and help
-    sg_width, sg_height = width // 10, height // 4 + height // 10
-    sn_width, sn_height = width // 2 - (width + rows) // 6, i_height // 10
+    # sn for snake
+    sg_width = width // 10
+    sg_height = height // 4 + height // 10
+    sn_width, sn_height = (width // 2 - (width + rows) // 6, i_height // 10)
     # Initializing objects
     images = utils.load_images(os.path.dirname(__file__), i_width, i_height)
-    surface = Surface(*game_values, caption="Snake Game", color=BLACK)
+    surface = Surface(*game_values, caption="Home Screen", color=BLACK)
     surface.make_screen()
     while True:
         for event in pygame.event.get():
@@ -46,13 +46,12 @@ def home(game_values):
                 pygame.draw.rect(surface.screen, RED, rect, 3)
                 if pygame.mouse.get_pressed()[0]:
                     return 1
-
+            # double player
             elif (
                 width - (sg_width + i_width)
                 <= x
                 <= width - (sg_width + i_width) + i_width
             ):
-                # double player
                 rect = pygame.Rect(
                     (width - (sg_width + i_width), sg_height), (i_width, i_height)
                 )

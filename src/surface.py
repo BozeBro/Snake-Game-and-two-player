@@ -10,7 +10,7 @@ class Surface:
     """
 
     def __init__(
-        self, rows=17, columns=17, blocksize=20, caption="Snake Game", color=BLACK
+        self, rows=17, columns=17, blocksize=20, caption="Snake Game", color=WHITE
     ):
         """
         :param:

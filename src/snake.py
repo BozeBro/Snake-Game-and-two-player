@@ -107,6 +107,7 @@ class Snake(Surface):
 
 
 if __name__ == "__main__":
+    pygame.init()
     # Test to handle snake spawning and movement
     surface = Surface()
     surface.make_screen()

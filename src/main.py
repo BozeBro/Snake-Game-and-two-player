@@ -5,6 +5,7 @@ from snake import Snake
 from colors import *
 
 import os.path
+import sys
 
 
 def home():
@@ -13,13 +14,22 @@ def home():
                                 Two Player
                                 How to Play
     """
+    game_values = {"rows": 30, "columns": 30, "blocksize": 10}.values()
+    # Initializing objects
+    surface = Surface(*game_values, caption="Snake Game", color=RED)
+    surface.make_screen()
+
     filepath = os.path.dirname(__file__)
+    # os.path.join gets the path of the image relative to the __main__ file
     single = pygame.image.load(os.path.join(filepath, "images\single.png"))
-    end = False
+    single = pygame.transform.scale(single, (40, 40))
     while not end:
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
-                end = True
+                pygame.quit()
+                sys.exit()
+        surface.screen.blit(single, (50, 50))
+        pygame.display.flip()
 
 
 def game(players=1):
@@ -87,7 +97,7 @@ def game(players=1):
 
     game_values = {"rows": 30, "columns": 30, "blocksize": 10}.values()
     # Initializing objects
-    surface = Surface(*game_values, caption="Snake Game", color=BLACK)
+    surface = Surface(*game_values, caption="Snake Game", color=WHITE)
     surface.make_screen()
     snake = Snake(
         surface.screen,
@@ -104,11 +114,12 @@ def game(players=1):
     apple = Apple(surface.screen, snakes, game_values, color=RED)
     apple.make_rect()
     pygame.display.flip()
-    running, end = True, False
-    while running and not end:
+    running = True
+    while running:
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
-                end = True
+                pygame.quit()
+                sys.exit()
         clock.tick(fps)
         # allow user time to make a move
         pygame.time.wait(wait_time)

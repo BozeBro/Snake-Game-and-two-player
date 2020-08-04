@@ -17,7 +17,7 @@ right: d key
 up: w key
 down: s key
 
-#GUI element
+# GUI element
 The program has a homescreen which will allow users to choose between single player or double player. 
 If the game ends, players will be sent back to the home screen.
 

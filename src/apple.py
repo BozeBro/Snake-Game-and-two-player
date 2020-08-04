@@ -13,7 +13,7 @@ class Apple(Surface):
             surface_data(iterable) - obtains rows, columns, and blocksize from a surface instance
             snakes(iterable) - all the snake player objects
             self.spawns(list) - valid places where an apple can spawn
-            color(tuple) - color of the apple rect
+            color(tuple) - color of the apple
         """
         self.screen = screen
         super().__init__(*surface_data)
@@ -30,7 +30,7 @@ class Apple(Surface):
         :return
             list of valid spawn coordinates -> self.spawns
         """
-        snakes = [body for body in [user.snake for user in snakes if user]]
+        snakes = [body for body in [snake.snake for snake in snake if user]]
         return [
             (cord_x, cord_y)
             for y in range(self.columns)
@@ -68,8 +68,6 @@ class Apple(Surface):
             self.spawns.append(tail)
             # error in remove method if snake out of grid.
             self.spawns.remove(head)
-            # self.exists in conditional to keep
-            # self.exists False if already false
             self.exists = (0, 1)[head != self.apple and self.exists]
         except ValueError:
             return False

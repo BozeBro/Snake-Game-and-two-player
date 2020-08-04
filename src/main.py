@@ -1,38 +1,68 @@
+import sys
+import os.path
 import pygame
+import utils
 from apple import Apple
 from surface import Surface
 from snake import Snake
 from colors import *
 
-import os.path
-import sys
 
-
-def home():
+def home(game_values):
     """
-                                Single Player
-                                Two Player
-                                How to Play
+    Home page of the game / GUI
     """
-    game_values = {"rows": 30, "columns": 30, "blocksize": 10}.values()
+    width = rows * blocksize
+    height = columns * blocksize
+    # icon size constants
+    i_width, i_height = width // 4 + (rows // 3), height // 4
+    # icon position constants,
+    # sg for single, and double,
+    # sn for snake and help
+    sg_width, sg_height = width // 10, height // 4 + height // 10
+    sn_width, sn_height = width // 2 - (width + rows) // 6, i_height // 10
     # Initializing objects
-    surface = Surface(*game_values, caption="Snake Game", color=RED)
+    images = utils.load_images(os.path.dirname(__file__), i_width, i_height)
+    surface = Surface(*game_values, caption="Snake Game", color=BLACK)
     surface.make_screen()
-
-    filepath = os.path.dirname(__file__)
-    # os.path.join gets the path of the image relative to the __main__ file
-    single = pygame.image.load(os.path.join(filepath, "images\single.png"))
-    single = pygame.transform.scale(single, (40, 40))
-    while not end:
+    while True:
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 pygame.quit()
                 sys.exit()
-        surface.screen.blit(single, (50, 50))
+        surface.screen.blit(
+            images["single"], (sg_width, sg_height),
+        )
+        surface.screen.blit(
+            images["double"], (width - (sg_width + i_width), sg_height),
+        )
+        surface.screen.blit(images["snake"], (sn_width, sn_height))
+        # Highlighting an icon
+        x, y = pygame.mouse.get_pos()
+        if sg_height <= y <= sg_height + i_height:
+            # single player
+            if sg_width <= x <= sg_width + i_width:
+                rect = pygame.Rect((sg_width, sg_height), (i_width, i_height))
+                pygame.draw.rect(surface.screen, RED, rect, 3)
+                if pygame.mouse.get_pressed()[0]:
+                    return 1
+
+            elif (
+                width - (sg_width + i_width)
+                <= x
+                <= width - (sg_width + i_width) + i_width
+            ):
+                # double player
+                rect = pygame.Rect(
+                    (width - (sg_width + i_width), sg_height), (i_width, i_height)
+                )
+                pygame.draw.rect(surface.screen, RED, rect, 3)
+                if pygame.mouse.get_pressed()[0]:
+                    return 2
         pygame.display.flip()
 
 
-def game(players=1):
+def game(game_values, players=1):
     """
     Overview
     -------------
@@ -94,8 +124,6 @@ def game(players=1):
     wait_time = 100
     fps = 30
     clock = pygame.time.Clock()
-
-    game_values = {"rows": 30, "columns": 30, "blocksize": 10}.values()
     # Initializing objects
     surface = Surface(*game_values, caption="Snake Game", color=WHITE)
     surface.make_screen()
@@ -148,6 +176,10 @@ def game(players=1):
 
 
 if __name__ == "__main__":
+    # screen constants
+    rows, columns, blocksize = 30, 30, 20
+    game_values = (rows, columns, blocksize)
     pygame.init()
-    home()
-    # game()
+    while True:
+        players = home(game_values)
+        game(game_values, players)

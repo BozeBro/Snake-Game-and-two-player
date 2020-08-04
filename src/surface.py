@@ -1,7 +1,6 @@
 import pygame
 from colors import *
 
-
 class Surface:
     """
     Handles functions that interact with the screen including:

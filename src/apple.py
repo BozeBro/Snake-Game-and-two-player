@@ -13,7 +13,7 @@ class Apple(Surface):
             surface_data(iterable) - obtains rows, columns, and blocksize from a surface instance
             snakes(iterable) - all the snake player objects
             self.spawns(list) - valid places where an apple can spawn
-            color(tuple) - color of the apple rect
+            color(tuple) - color of the apple
         """
         self.screen = screen
         super().__init__(*surface_data)

@@ -15,14 +15,13 @@ def load_images(parent_path, i_width, i_height):
     parent_path = os.path.join(parent_path, "images")
     images = os.listdir(parent_path)
     # Gets the path of each image
+    # and gets pygame surface object from the path
     images = {
-        image.split(".")[0]: pygame.image.load(os.path.join(parent_path, image))
+        image.split(".")[0]: pygame.transform.scale(
+            pygame.image.load(os.path.join(parent_path, image)), 
+            (i_width, i_height)
+        )
         for image in images
-    }
-    # Gets the pygame surface object of each image
-    images = {
-        name: pygame.transform.scale(path, (i_width, i_height,),)
-        for name, path in images.items()
     }
     return images
 

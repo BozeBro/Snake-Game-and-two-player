@@ -1,7 +1,6 @@
 import os
 import pygame
 
-
 def load_images(parent_path, i_width, i_height):
     """
     loads images in a different directory
@@ -10,10 +9,10 @@ def load_images(parent_path, i_width, i_height):
         i_width(int) - width of each image
         i_height(int) - height of each image
     :return
-        images(dict)
+        images(dict(str: pygame surface object))
     """
     parent_path = os.path.join(parent_path, "images")
-    images = os.listdir(parent_path)
+    images = iter(os.listdir(parent_path))
     # Gets the path of each image
     # and gets pygame surface object from the path
     images = {

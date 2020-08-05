@@ -147,8 +147,8 @@ def game(game_values, players=1):
             if event.type == pygame.QUIT:
                 pygame.quit()
                 sys.exit()
-        clock.tick(fps)
         # allow user time to make a move
+        clock.tick(fps)
         pygame.time.wait(wait_time)
         # move() Handles self collision, collision with others, and ollision with walls
         running, winner = move_snake(snake, snake2, "snake2")
